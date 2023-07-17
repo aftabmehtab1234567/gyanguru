@@ -1,12 +1,16 @@
-
 <?php
 // Assuming you have already established a database connection
-$connection =mysqli_connect("localhost",  "root", "", "eduprix");
-// Retrieve quiz questions and options from the database
+$connection = mysqli_connect("localhost", "root", "", "eduprix");
+
+// Retrieve the ID from the URL
+$id = $_GET['id'];
+
+// Retrieve quiz questions and options based on the ID
 $query = "SELECT qq.question_id, qq.question_text, qo.option_id, qo.option_text
           FROM quiz_questions AS qq
-          JOIN quiz_options AS qo ON qq.question_id = qo.question_id";
-          
+          JOIN quiz_options AS qo ON qq.question_id = qo.question_id
+          WHERE qq.quiz_id = $id";
+
 $result = mysqli_query($connection, $query);
 
 // Store the retrieved questions and options in an associative array
@@ -30,34 +34,27 @@ while ($row = mysqli_fetch_assoc($result)) {
         'option_text' => $optionText
     );
 }
-
-
 ?>
 
-
 <!DOCTYPE html>
+<html>
 <head>
-	 <!-- Required meta tags -->
-     <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Bootstrap CSS -->
-  <link href="assets/css/style.css" rel="stylesheet" type="text/css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="assets/css/style.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <title>Eduprix</title>
-	
-	
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Eduprix</title>
 </head>
- 
 <body>
-<?php include 'header.php';?>
-	<div id="page-wrap">
-        <form action="result.php" method="post">
+<?php include 'header.php'; ?>
+<div id="page-wrap">
+    <form action="result.php" method="post">
         <?php foreach ($questions as $questionId => $question): ?>
             <h4>Question <?php echo $questionId; ?>:</h4>
             <h6><?php echo $question['question_text']; ?></h6>
@@ -70,10 +67,13 @@ while ($row = mysqli_fetch_assoc($result)) {
             <br>
         <?php endforeach; ?>
 
-        <input type="submit" class="btngetcourse mb-4" name ="submit" value="Submit">
+        <input type="submit" class="btngetcourse mb-4" name="submit" value="Submit">
     </form>
-    </div>
-    <?php include 'footer.php' ?>
+</div>
+<?php include 'footer.php' ?>
+</body>
+</html>
+
 
     <script>const openSidebar = () => {
     document.getElementById("mySidebar").style.width = "250px";
